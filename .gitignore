@@ -1,0 +1,22 @@
+# Environment variables
+.env
+.env.local
+
+# Node modules 
+node_modules/
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# VS Code settings
+.vscode/
+
+# Temporary files
+*.tmp
+*.temp
