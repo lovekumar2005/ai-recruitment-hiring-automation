@@ -1,0 +1,1068 @@
+{
+  "name": "AI Recruitment & Hiring Platform",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "candidate-application",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -432,
+        -208
+      ],
+      "id": "4a54f184-f736-40fa-aa91-aaf8452431e9",
+      "name": "Receive Candidate Application",
+      "webhookId": "1ebb5c11-b1b9-4c11-949e-545b7c4ee897"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "resume",
+        "name": "={{ $json.body.name }} Resume.pdf",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1xuYu1A8QI2wNm3xtzenmn6OqdxBFhcR3",
+          "mode": "list",
+          "cachedResultName": "Resumes",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1xuYu1A8QI2wNm3xtzenmn6OqdxBFhcR3"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -112,
+        -208
+      ],
+      "id": "eef74a5d-adc9-43f4-a4b6-464bbf11c01e",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "nBEW78IS0tKOWrJK",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{$json.id}}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        144,
+        -208
+      ],
+      "id": "379945b8-da19-4780-8e72-626f1f9c04f6",
+      "name": "Share file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "nBEW78IS0tKOWrJK",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "df3023c6-5467-4e42-b668-22689449de7c",
+              "name": "Resume URL",
+              "value": "=https://drive.google.com/uc?export=download&id={{$('Upload file').item.json.id}}",
+              "type": "string"
+            },
+            {
+              "id": "878a8d9a-698d-4577-9aa6-40230518d2a4",
+              "name": "Name",
+              "value": "={{ $('Receive Candidate Application').item.json.body.name }}",
+              "type": "string"
+            },
+            {
+              "id": "c62af068-424f-490f-955a-c22124035522",
+              "name": "Email",
+              "value": "={{ $('Receive Candidate Application').item.json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "6c445f65-fe66-4106-baaf-9c1cfceb0c09",
+              "name": "Phone",
+              "value": "={{ $('Receive Candidate Application').item.json.body.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "0faab91c-3cb8-4a8a-93e6-7f3e3e5c4faf",
+              "name": "Experience ",
+              "value": "={{ $('Receive Candidate Application').item.json.body.experience }}",
+              "type": "string"
+            },
+            {
+              "id": "5e6c017c-cc3c-4024-8824-6a4d63395705",
+              "name": "Position Applied",
+              "value": "={{ $('Receive Candidate Application').item.json.body.position }}",
+              "type": "string"
+            },
+            {
+              "id": "1b24453d-504b-4a0b-b682-c982119af1b1",
+              "name": "Education",
+              "value": "={{ $('Receive Candidate Application').item.json.body.education }}",
+              "type": "string"
+            },
+            {
+              "id": "68845e87-b3e9-4b68-8487-13a50d8478b0",
+              "name": "Skills",
+              "value": "={{ $('Receive Candidate Application').item.json.body.skills }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        -208
+      ],
+      "id": "feb66b2b-253f-429f-9b5e-10870dffd9e1",
+      "name": "Prepare Candidate Data"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "resume",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        160,
+        -384
+      ],
+      "id": "8536c0b0-6eeb-4d44-97ad-e02a39e27ba4",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        720,
+        -224
+      ],
+      "id": "e9fa11b5-ea9c-4dc7-973c-3437987ef8be",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "let aiResponse = $input.first().json.output;\n\n// Remove markdown\naiResponse = aiResponse\n  .replace(/```json/g, \"\")\n  .replace(/```/g, \"\")\n  .trim();\n\n// Parse JSON\nconst data = JSON.parse(aiResponse);\n\nreturn [\n  {\n    json: {\n      candidate_name: data.candidate_name,\n      email: data.email,\n      position_applied: data.position_applied,\n      overall_score: data.overall_score,\n      rating: data.rating,\n      category: data.category,\n      seniority_level: data.seniority_level,\n      experience_years: data.experience_years,\n\n      technical_skills: data.technical_skills.join(\", \"),\n      soft_skills: data.soft_skills.join(\", \"),\n\n      education: data.education,\n\n      strengths: data.strengths.join(\", \"),\n      weaknesses: data.weaknesses.join(\", \"),\n      missing_information: data.missing_information.join(\", \"),\n\n      summary: data.summary,\n\n      recommended_for_interview: data.recommended_for_interview,\n\n      interview_questions: data.interview_questions.join(\"\\n\\n\")\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        -224
+      ],
+      "id": "8ec53763-4cac-4e5a-bc46-a071f19fe0b2",
+      "name": "Parse AI Response"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "01187a36-1e4f-459c-a4d3-fb3aa38cad81",
+              "leftValue": "={{ $json.overall_score }}",
+              "rightValue": 80,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -400,
+        176
+      ],
+      "id": "2dff451b-df4c-432f-83c8-ada1c11f5806",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Candidate Information\n\nName:\n{{ $json.Name }}\n\nEmail:\n{{ $json.Email }}\n\nPhone:\n{{ $json.Phone }}\n\nPosition Applied:\n{{ $json[\"Position Applied\"] }}\n\nExperience:\n{{ $json['Experience '] }}\n\nEducation:\n{{ $json.Education }}\n\nSkills:\n{{ $json.Skills }}\n\nResume Text:\n\n{{ $json.text }}\n\nAnalyze this candidate according to the system instructions and return ONLY valid JSON.\n",
+        "options": {
+          "systemMessage": "You are an experienced Senior HR Recruiter and Technical Talent Acquisition Specialist.\n\nYour job is to analyze every candidate objectively based on the information provided, including their resume, skills, experience, education, and the job position they applied for.\n\nEvaluate the candidate as a professional recruiter would.\n\n### Your responsibilities:\n\n1. Read and understand the entire resume.\n2. Identify the candidate's:\n\n   * Technical skills\n   * Soft skills\n   * Years of experience\n   * Education\n   * Previous companies\n   * Projects\n   * Certifications (if available)\n3. Compare the candidate's qualifications with the applied position.\n4. Identify strengths and weaknesses.\n5. Give a hiring recommendation.\n6. Calculate an overall score from 0 to 100.\n7. Classify the candidate into one of these categories:\n\n   * Excellent Fit\n   * Good Fit\n   * Average Fit\n   * Poor Fit\n8. Estimate the candidate's seniority level:\n\n   * Intern\n   * Junior\n   * Mid-Level\n   * Senior\n   * Lead\n9. Detect missing information if any.\n10. Suggest interview questions based on the resume.\n\nAlways remain objective, fair, and professional.\n\nNever invent information that is not present in the resume.\n\nIf information is missing, state that it is unavailable instead of guessing.\n\nReturn ONLY valid JSON.\n\nReturn the response using this exact structure:\n\n{\n\"candidate_name\": \"\",\n\"email\": \"\",\n\"position_applied\": \"\",\n\"overall_score\": 0,\n\"rating\": \"\",\n\"category\": \"\",\n\"seniority_level\": \"\",\n\"experience_years\": \"\",\n\"technical_skills\": [],\n\"soft_skills\": [],\n\"education\": \"\",\n\"strengths\": [],\n\"weaknesses\": [],\n\"missing_information\": [],\n\"summary\": \"\",\n\"recommended_for_interview\": true,\n\"interview_questions\": [\n\"\",\n\"\",\n\"\",\n\"\",\n\"\"\n]\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1008,
+        -224
+      ],
+      "id": "22bc8862-312d-4119-a420-cd5443e053e7",
+      "name": "AI HR Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        -64
+      ],
+      "id": "d16277b1-114a-44df-b716-0867b5546928",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "bfbRREHhOLymvGtY",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "lovepehlaj2005@gmail.com",
+          "mode": "list",
+          "cachedResultName": "lovepehlaj2005@gmail.com"
+        },
+        "start": "={{ $now.plus({ days: 1 }).set({ hour: 10, minute: 0, second: 0 }).toISO() }}",
+        "end": "={{ $now.plus({ days: 1 }).set({ hour: 10, minute: 30, second: 0 }).toISO() }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ $json.Email }}"
+          ],
+          "description": "={{ $json.Summary }}",
+          "summary": "=Interview - {{ $json['Candidate Name'] }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        96
+      ],
+      "id": "e7fc5d05-82c6-44ae-bf58-d4e3b288234f",
+      "name": "Create Interview Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "rhq1OzDLnmbgkvUD",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Q8R5NHSzYEPW_2w5rq_78bYGZPQYzref-HnUx-6XccE",
+          "mode": "list",
+          "cachedResultName": "AI Recruitment Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Q8R5NHSzYEPW_2w5rq_78bYGZPQYzref-HnUx-6XccE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Q8R5NHSzYEPW_2w5rq_78bYGZPQYzref-HnUx-6XccE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Candidate Name": "={{ $json.candidate_name }}",
+            "Position": "={{ $json.position_applied }}",
+            "Score": "={{ $json.overall_score }}",
+            "Rating": "={{ $json.rating }}",
+            "Category": "={{ $json.category }}",
+            "Seniority": "={{ $json.seniority_level }}",
+            "Skills": "={{ $json.technical_skills }}",
+            "Summary": "={{ $json.summary }}",
+            "Status": "Shortlisted",
+            "Email": "={{ $json.email }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Candidate Name",
+              "displayName": "Candidate Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Position",
+              "displayName": "Position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Score",
+              "displayName": "Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Rating",
+              "displayName": "Rating",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Seniority",
+              "displayName": "Seniority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Skills",
+              "displayName": "Skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -128,
+        96
+      ],
+      "id": "39d7525d-09aa-485a-9506-e24a9ab08498",
+      "name": "Save Candidate in CRM",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sIrK6DjLR2OsAzoC",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Q8R5NHSzYEPW_2w5rq_78bYGZPQYzref-HnUx-6XccE",
+          "mode": "list",
+          "cachedResultName": "AI Recruitment Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Q8R5NHSzYEPW_2w5rq_78bYGZPQYzref-HnUx-6XccE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Q8R5NHSzYEPW_2w5rq_78bYGZPQYzref-HnUx-6XccE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Candidate Name": "={{ $json.candidate_name }}",
+            "Position": "={{ $json.position_applied }}",
+            "Score": "={{ $json.overall_score }}",
+            "Rating": "={{ $json.rating }}",
+            "Category": "={{ $json.category }}",
+            "Seniority": "={{ $json.seniority_level }}",
+            "Skills": "={{ $json.technical_skills }}",
+            "Summary": "={{ $json.summary }}",
+            "Status": "Rejected",
+            "Email": "={{ $json.email }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Candidate Name",
+              "displayName": "Candidate Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Position",
+              "displayName": "Position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Score",
+              "displayName": "Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Rating",
+              "displayName": "Rating",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Seniority",
+              "displayName": "Seniority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Skills",
+              "displayName": "Skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -128,
+        272
+      ],
+      "id": "4286c7ec-b204-4075-9947-25e0cda516c3",
+      "name": "Save Candidate in CRM1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sIrK6DjLR2OsAzoC",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "lovepehlaj2005@gmail.com",
+        "subject": "Congratulations! Interview Scheduled",
+        "message": "=<!DOCTYPE html>\n\n<html>\n\n<body style=\"margin:0;padding:30px;background:#f5f7fb;font-family:Arial,sans-serif;\">\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">\n<tr>\n<td align=\"center\">\n\n<table width=\"650\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#ffffff;border-radius:10px;overflow:hidden;\">\n\n<tr>\n<td style=\"background:#1565C0;padding:30px;text-align:center;color:white;\">\n\n<h1 style=\"margin:0;\">Congratulations!</h1>\n\n<p style=\"margin-top:10px;\">\nYou have been shortlisted for the next stage.\n</p>\n\n</td>\n</tr>\n\n<tr>\n<td style=\"padding:35px;\">\n\n<p>Hello <strong>{{ $('Save Candidate in CRM').item.json['Candidate Name'] }}</strong>,</p>\n\n<p>\nThank you for applying for the\n<strong>{{ $('Save Candidate in CRM').item.json.Position }}</strong>\nposition.\n</p>\n\n<p>\nOur recruitment team has reviewed your application, and we are pleased to invite you to the interview stage.\n</p>\n\n<table width=\"100%\" cellpadding=\"10\" style=\"border-collapse:collapse;margin-top:20px;border:1px solid #ddd;\">\n\n<tr>\n<td><strong>Interview Date and Time: </strong></td>\n<td>\n {{ DateTime.fromISO($('Create Interview Event').item.json.start.dateTime).toFormat(\"dd LLL yyyy, hh:mm a\") }}</td>\n</tr>\n\n<tr>\n<td><strong>Meeting Link: </strong></td>\n<td>\n<a href=\"https://abc.google.meet\">\nJoin Interview\n</a>\n</td>\n</tr>\n\n</table>\n\n<p style=\"margin-top:25px;\">\nPlease ensure you join the meeting 10 minutes before the scheduled time.\n</p>\n\n<p>\nIf you have any questions, simply reply to this email.\n</p>\n\n<p>\nBest Regards,<br>\n<strong>HR Recruitment Team</strong>\n</p>\n\n</td>\n</tr>\n\n<tr>\n\n<td style=\"background:#eeeeee;padding:20px;text-align:center;font-size:12px;color:#666;\">\n\nAI Recruitment Platform\n\n</td>\n\n</tr>\n\n</table>\n\n</td>\n\n</tr>\n\n</table>\n\n</body>\n\n</html>\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        304,
+        96
+      ],
+      "id": "86ad6d52-7c83-4d0b-b4fa-38a81c677d15",
+      "name": "Send Interview Email to Candidate",
+      "webhookId": "78eaf146-9fbd-44f7-829a-20fa52ae0154",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "e7zRSDkTYXQlh7BS",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "lovepehlaj2005@gmail.com",
+        "subject": "=Application Update - {{ $json.Position }} Position",
+        "message": "=<!DOCTYPE html>  <html> <head> <meta charset=\"UTF-8\"> <style> body{ font-family:Arial,Helvetica,sans-serif; background:#f4f6f9; margin:0; padding:30px; } .container{ max-width:700px; margin:auto; background:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,.1); } .header{ background:#C62828; color:#ffffff; padding:25px; text-align:center; } .header h1{ margin:0; font-size:28px; } .content{ padding:35px; color:#333333; line-height:1.7; } .info-box{ background:#f8f9fa; border-left:5px solid #C62828; padding:18px; margin:25px 0; border-radius:5px; } table{ width:100%; border-collapse:collapse; margin-top:20px; } th,td{ padding:12px; border:1px solid #dddddd; text-align:left; } th{ background:#C62828; color:#ffffff; width:35%; } .button{ display:inline-block; padding:12px 22px; background:#1565C0; color:#ffffff !important; text-decoration:none; border-radius:6px; margin-top:20px; } .footer{ background:#f5f5f5; padding:20px; text-align:center; font-size:13px; color:#666666; } </style> </head>  <body>  <div class=\"container\">  <div class=\"header\"> <h1>Application Status Update</h1> <p>Thank You for Your Interest</p> </div>  <div class=\"content\">  <p>Dear <strong>{{ $json['Candidate Name'] }}</strong>,</p>  <p> Thank you for taking the time to apply for the <strong>{{ $json.Position }}</strong> position at our company. We sincerely appreciate your interest and the effort you invested in your application. </p>  <div class=\"info-box\">  <p> After carefully reviewing your application and completing our initial evaluation process, we have decided to move forward with candidates whose qualifications more closely match the current requirements of this position. </p>  </div>  <table>  <tr> <th>Candidate</th> <td>{{ $json['Candidate Name'] }}</td> </tr>  <tr> <th>Position Applied</th> <td>{{ $json.Position }}</td> </tr>  <tr> <th>Application Status</th> <td>Not Selected</td> </tr>  <tr> <th>Evaluation Result</th> <td>{{ $json.Category }}</td> </tr>  </table>  <p> Please note that this decision applies only to this specific role and is not a reflection of your overall abilities or potential. We encourage you to continue developing your skills and to apply again for future opportunities that align with your experience and career goals. </p>  <p> We will keep your profile in our talent database and may contact you if a suitable position becomes available in the future. </p>  <p> We wish you every success in your career and thank you once again for considering our organization. </p>  <p> Best regards,<br><br>  <strong>Human Resources Team</strong><br> Recruitment Department  </p>  </div>  <div class=\"footer\"> This is an automated email generated by our AI Recruitment System.<br> Please do not reply directly to this message. </div>  </div>  </body> </html>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        272
+      ],
+      "id": "637bf9c2-f583-4c89-9f10-7720a0946cf0",
+      "name": "Send Rejection Email to Candidate",
+      "webhookId": "cdcf6bd9-d7a8-4ae2-9177-142550a21e53",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "e7zRSDkTYXQlh7BS",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "lovepehlaj2005@gmail.com",
+        "subject": "=Candidate Shortlisted: {{ $('Save Candidate in CRM').item.json['Candidate Name'] }}| AI Recruitment Report",
+        "message": "=<!DOCTYPE html>\n\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<style>\nbody{\nfont-family:Arial,Helvetica,sans-serif;\nbackground:#f4f6f9;\nmargin:0;\npadding:30px;\n}\n.container{\nmax-width:750px;\nmargin:auto;\nbackground:#ffffff;\nborder-radius:10px;\noverflow:hidden;\nbox-shadow:0 4px 15px rgba(0,0,0,.1);\n}\n.header{\nbackground:#1565C0;\ncolor:white;\npadding:25px;\ntext-align:center;\n}\n.header h1{\nmargin:0;\n}\n.content{\npadding:30px;\n}\ntable{\nwidth:100%;\nborder-collapse:collapse;\nmargin-top:20px;\n}\nth,td{\npadding:12px;\nborder:1px solid #ddd;\ntext-align:left;\n}\nth{\nbackground:#1565C0;\ncolor:white;\nwidth:35%;\n}\n.score{\nfont-size:30px;\nfont-weight:bold;\ncolor:#2E7D32;\n}\n.badge{\ndisplay:inline-block;\npadding:8px 14px;\nbackground:#E8F5E9;\ncolor:#2E7D32;\nfont-weight:bold;\nborder-radius:20px;\n}\n.button{\ndisplay:inline-block;\npadding:12px 22px;\nbackground:#1565C0;\ncolor:white !important;\ntext-decoration:none;\nborder-radius:6px;\nmargin-top:15px;\n}\n.footer{\nbackground:#f5f5f5;\npadding:20px;\ntext-align:center;\nfont-size:13px;\ncolor:#666;\n}\n</style>\n</head>\n\n<body>\n\n<div class=\"container\">\n\n<div class=\"header\">\n<h1>AI Recruitment Evaluation Report</h1>\n<p>Candidate Successfully Shortlisted</p>\n</div>\n\n<div class=\"content\">\n\n<p>Hello HR Team,</p>\n\n<p>\nA new candidate has successfully passed the AI screening process and has been shortlisted for the next hiring stage.\n</p>\n\n<p class=\"score\"> {{ $('Save Candidate in CRM').item.json.Score }} / 100</p>\n\n<span class=\"badge\">{{ $('Save Candidate in CRM').item.json.Category }}</span>\n\n<table>\n\n<tr>\n<th>Candidate Name</th>\n<td>{{ $('Save Candidate in CRM').item.json['Candidate Name'] }}</td>\n</tr>\n\n<tr>\n<th>Position Applied</th>\n<td>{{ $('Save Candidate in CRM').item.json.Position }}</td>\n</tr>\n\n<tr>\n<th>Email</th>\n<td>{{ $('Save Candidate in CRM').item.json.Email }}</td>\n</tr>\n\n<tr>\n<th>Experience</th>\n<td>{{ $('Prepare Candidate Data').item.json['Experience '] }} Years</td>\n</tr>\n\n<tr>\n<th>Seniority</th>\n<td>{{ $('Save Candidate in CRM').item.json.Seniority }}</td>\n</tr>\n\n<tr>\n<th>Rating</th>\n<td>{{ $('Save Candidate in CRM').item.json.Rating }}</td>\n</tr>\n\n<tr>\n<th>Recommendation</th>\n<td>{{ $('Parse AI Response').item.json.recommended_for_interview }}</td>\n</tr>\n\n<tr>\n<th>Technical Skills</th>\n<td>{{ $('Parse AI Response').item.json.technical_skills }}</td>\n</tr>\n\n<tr>\n<th>Soft Skills</th>\n<td>{{ $('Parse AI Response').item.json.soft_skills }}</td>\n</tr>\n\n<tr>\n<th>Strengths</th>\n<td>{{ $('Parse AI Response').item.json.strengths }}</td>\n</tr>\n\n<tr>\n<th>Weaknesses</th>\n<td>{{ $('Parse AI Response').item.json.weaknesses }}</td>\n</tr>\n\n<tr>\n<th>AI Summary</th>\n<td>{{ $('Parse AI Response').item.json.summary }}</td>\n</tr>\n\n<tr>\n<th>Interview Date</th>\n<td> {{ DateTime.fromISO($('Create Interview Event').item.json.start.dateTime).toFormat(\"cccc, dd LLL yyyy, hh:mm a\") }}</td>\n</tr>\n\n<tr>\n<th>Resume</th>\n<td>\n<a href=\"{{ $('Prepare Candidate Data').item.json['Resume URL'] }}\">\nView Resume\n</a>\n</td>\n</tr>\n\n<tr>\n<th>AI PDF Report</th>\n<td>\n<a href=\"{{ $('Upload file1').item.json.webViewLink }}\">\nDownload Report\n</a>\n</td>\n</tr>\n\n</table>\n\n<p>\n\n<a class=\"button\" href=\"{{ $('Upload file1').item.json.webViewLink }}\">\nOpen Complete AI Report\n</a>\n\n</p>\n\n<p>\nThe interview has already been scheduled automatically through Google Calendar.\n</p>\n\n<p>\nPlease review the attached AI evaluation report before conducting the interview.\n</p>\n\n<p>\nRegards,<br>\n<b>AI Recruitment Automation System</b><br>\nPowered by n8n + Gemini AI\n</p>\n\n</div>\n\n<div class=\"footer\">\nThis email was generated automatically by the AI Recruitment Workflow.\n</div>\n\n</div>\n\n</body>\n</html>\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1536,
+        96
+      ],
+      "id": "ce9a70a5-0c54-4179-8d3a-e42101ac7abb",
+      "name": "Notify HR",
+      "webhookId": "5eeef6ab-1b1e-42d6-9461-0866a0ff3068",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "e7zRSDkTYXQlh7BS",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        496,
+        240
+      ],
+      "id": "b34af88c-533b-430a-b26a-88c7472938b9",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "bfbRREHhOLymvGtY",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Candidate Name:\n{{ $('Save Candidate in CRM').item.json['Candidate Name'] }}\n\nEmail:\n{{ $('Save Candidate in CRM').item.json.Email }}\n\nPosition:\n{{ $('Save Candidate in CRM').item.json.Position }}\n\nExperience:\n{{ $('Parse AI Response').item.json.experience_years }} years\n\nEducation:\n{{ $('Parse AI Response').item.json.education }}\n\nOverall Score:\n{{ $('Save Candidate in CRM').item.json.Score }}\n\nRating:\n{{ $('Save Candidate in CRM').item.json.Rating }}\n\nCategory:\n{{ $('Save Candidate in CRM').item.json.Category }}\n\nTechnical Skills:\n{{ $('Save Candidate in CRM').item.json.Skills }}\n\nSoft Skills:\n{{ $('Parse AI Response').item.json.soft_skills }}\n\nStrengths:\n{{ $('Parse AI Response').item.json.strengths }}\n\nWeaknesses:\n{{ $('Parse AI Response').item.json.weaknesses }}\n\nSummary:\n{{ $('Save Candidate in CRM').item.json.Summary }}\n\nRecommendation:\n{{ $('Parse AI Response').item.json.recommended_for_interview }}\n\nResume URL:\n{{ $('Prepare Candidate Data').item.json['Resume URL'] }}\n\nGenerate a complete professional HTML report.",
+        "options": {
+          "systemMessage": "You are an expert HR report generator.\n\nYour task is to generate a complete professional HTML document.\n\nRules:\n\n* Return ONLY valid HTML.\n* Do not use Markdown.\n* Do not wrap the HTML inside ```html blocks.\n* Include CSS inside the <style> tag.\n* Make the report look modern and professional.\n* Use blue and gray colors.\n* Include a company-style header.\n* Use tables for candidate information.\n* Use colored score badges.\n* Use section headings.\n* Add a footer saying:\n  \"Generated Automatically by AI Recruitment Platform.\"\n\nThe report must contain these sections:\n\n1. Candidate Information\n\n* Name\n* Email\n* Phone\n* Position\n* Experience\n* Education\n\n2. AI Evaluation\n\n* Overall Score\n* Rating\n* Category\n* Recommendation\n\n3. Technical Skills\n\n4. Soft Skills\n\n5. Strengths\n\n6. Weaknesses\n\n7. AI Summary\n\n8. Suggested Interview Questions\n\n9. Resume Link\n\nReturn ONLY the HTML document.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        496,
+        96
+      ],
+      "id": "ca0c9195-7a43-4424-8a7b-4ebb82addfc3",
+      "name": "Generate HTML Report"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pdfshift.io/v3/convert/pdf",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "source",
+              "value": "={{$json.html}}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "report"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        960,
+        96
+      ],
+      "id": "ae36d063-68e1-4ccf-b31c-ed10c68c7773",
+      "name": "Generate PDF",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "dWPJEm5WmWPcynvN",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      html: $input.first().json.output\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        784,
+        96
+      ],
+      "id": "85b70694-68e1-45f8-9008-17789f08718b",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "report",
+        "name": "=AI Report - {{ $('Save Candidate in CRM').item.json['Candidate Name'] }}.pdf",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1xuYu1A8QI2wNm3xtzenmn6OqdxBFhcR3",
+          "mode": "list",
+          "cachedResultName": "Resumes",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1xuYu1A8QI2wNm3xtzenmn6OqdxBFhcR3"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1152,
+        96
+      ],
+      "id": "21a1dd8c-dabe-4577-96b6-d1fae5498c1a",
+      "name": "Upload file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "nBEW78IS0tKOWrJK",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1344,
+        96
+      ],
+      "id": "91687a51-e178-4af2-886a-4de2bbd30bbe",
+      "name": "Share file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "nBEW78IS0tKOWrJK",
+          "name": "Google Drive account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Receive Candidate Application": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Share file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share file": {
+      "main": [
+        [
+          {
+            "node": "Prepare Candidate Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Candidate Data": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "AI HR Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse AI Response": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI HR Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Save Candidate in CRM",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Save Candidate in CRM1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI HR Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Interview Event": {
+      "main": [
+        [
+          {
+            "node": "Send Interview Email to Candidate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Candidate in CRM": {
+      "main": [
+        [
+          {
+            "node": "Create Interview Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Candidate in CRM1": {
+      "main": [
+        [
+          {
+            "node": "Send Rejection Email to Candidate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify HR": {
+      "main": [
+        []
+      ]
+    },
+    "Send Interview Email to Candidate": {
+      "main": [
+        [
+          {
+            "node": "Generate HTML Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate HTML Report",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate HTML Report": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Generate PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate PDF": {
+      "main": [
+        [
+          {
+            "node": "Upload file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file1": {
+      "main": [
+        [
+          {
+            "node": "Share file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share file1": {
+      "main": [
+        [
+          {
+            "node": "Notify HR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "be32345f-bbe7-47ed-a809-ab975397d51d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4743866d7394ae1a4a3e8b7e24b3361b85dc08aa6c9e4f6ac41f46ff687494b9"
+  },
+  "nodeGroups": [],
+  "id": "z3lpyuwxUjsj0ksr",
+  "tags": []
+}
