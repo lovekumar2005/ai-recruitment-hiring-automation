@@ -136,15 +136,12 @@ Notify HR
 
 # Workflow Screenshot
 
-> Replace this image with your workflow screenshot.
 
 ![Workflow](assets/workflow.png)
 
 ---
 
 # System Architecture
-
-> Replace this image with your architecture diagram.
 
 ![Architecture](assets/architecture.png)
 
@@ -273,7 +270,6 @@ Configure the following credentials inside n8n.
 
 # Sample Screenshots
 
-Replace these placeholders with your own screenshots.
 
 ## Candidate CRM
 
