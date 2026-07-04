@@ -1,10 +1,6 @@
 # AI Recruitment & Hiring Automation
 
 <p align="center">
-  <img src="assets/thumbnail.png" alt="AI Recruitment & Hiring Automation Banner" width="100%">
-</p>
-
-<p align="center">
 
 ![n8n](https://img.shields.io/badge/n8n-Automation-orange)
 ![Groq](https://img.shields.io/badge/Groq-LLM-blue)
@@ -57,59 +53,48 @@ The workflow follows the recruitment process below:
 Candidate Application
 
         │
-
         ▼
 
 Receive Resume (Webhook)
 
         │
-
         ▼
 
 Upload Resume to Google Drive
 
         │
-
         ▼
 
 Extract Resume Text
 
         │
-
         ▼
 
 Prepare Candidate Data
 
         │
-
         ▼
 
 AI HR Agent Analysis
 
         │
-
         ▼
 
 Parse AI Response
 
         │
-
         ▼
 
 Candidate Qualified?
 
       /     \
-
     Yes      No
-
     │         │
-
     ▼         ▼
 
 Save CRM   Save CRM
 
     │         │
-
     ▼         ▼
 
 Interview   Rejection Email
@@ -117,37 +102,31 @@ Interview   Rejection Email
 Calendar
 
     │
-
     ▼
 
 Interview Email
 
     │
-
     ▼
 
 Generate HTML Report
 
     │
-
     ▼
 
 Generate PDF
 
     │
-
     ▼
 
 Upload to Google Drive
 
     │
-
     ▼
 
 Share Report
 
     │
-
     ▼
 
 Notify HR
@@ -252,7 +231,6 @@ AI-Recruitment-Hiring-Automation/
 │
 ├── assets/
 ├── docs/
-├── examples/
 ├── prompts/
 ├── workflow/
 │
@@ -308,15 +286,15 @@ assets/screenshots/google-sheet.png
 ## Interview Email
 
 ```
-assets/screenshots/gmail.png
+assets/screenshots/interview-email
 ```
 
 ---
 
-## Interview Event
+## Rejection Email
 
 ```
-assets/screenshots/calendar.png
+assets/screenshots/rejection-email
 ```
 
 ---
@@ -324,7 +302,7 @@ assets/screenshots/calendar.png
 ## Generated Report
 
 ```
-assets/screenshots/report.png
+assets/screenshots/pdf-report
 ```
 
 ---
@@ -417,7 +395,7 @@ See the **LICENSE** file for details.
 
 # Author
 
-**Love Pehlaj**
+**Love Kumar**
 
 AI Automation Developer
 
